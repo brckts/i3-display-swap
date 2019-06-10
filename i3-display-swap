@@ -36,16 +36,15 @@ def swap_outputs(a, b):
 
 i3 = i3ipc.Connection()
 
-current = focused_display()
+target = focused_display()
 primary = get_primary()
 
-if(current['name'] != primary['name']):
-    swap_outputs(current, primary)
-else:
+if(target['primary']):
     s = ""
     for display in i3.get_outputs():
         if not display['primary'] and display['name'] != 'xroot-0':
             s += display['name'] + "\n"
 
-    target = subprocess.run(["dmenu", "-l", str(len(s.split('\n'))), "-p", "Send where?"], input=s, capture_output=True, text=True).stdout[:-1]
-    swap_outputs(primary, get_display(target))
+    target = get_display(subprocess.run(["dmenu", "-l", str(len(s.split('\n'))), "-p", "Send where?"], input=s, capture_output=True, text=True).stdout[:-1])
+
+swap_outputs(primary, target)
