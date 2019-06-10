@@ -6,7 +6,9 @@ A simple python script to swap workspaces between displays in i3.
 2. dmenu
 
 ## Usage
-Launching it from a workspace not on your primary display will swap that workspace with the one currently in your primary display. Launching it from your primary display will spawn a dmenu prompt asking you with which display to swap.
+Put it somewhere on your path and bind some keys to it.
+Will swap focused workspace with the one on the primary display.
+If the former is the latter, it will spawn a dmenu prompt asking you which display to swap it with.
 
 ## Credit where credit is due
 This script is basically an improved version of https://github.com/giuseppe-dandrea/i3-swap-workspaces-between-screens designed to work with more than two monitors.
