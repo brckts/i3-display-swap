@@ -25,13 +25,13 @@ def get_display(name):
             return display
 
 
-def swap_outputs(a, b):
-    current_workspace = a['current_workspace']
-    primary_workspace = b['current_workspace']
-    i3.command('workspace --no-auto-back-and-forth ' + current_workspace)
-    i3.command('move workspace to output ' + b['name'])
+def swap_outputs(primary, target):
+    target_workspace = target['current_workspace']
+    primary_workspace = primary['current_workspace']
+    i3.command('workspace --no-auto-back-and-forth ' + target_workspace)
+    i3.command('move workspace to output ' + primary['name'])
     i3.command('workspace --no-auto-back-and-forth ' + primary_workspace)
-    i3.command('move workspace to output ' + a['name'])
+    i3.command('move workspace to output ' + target['name'])
 
 
 i3 = i3ipc.Connection()
@@ -47,4 +47,5 @@ if(target['primary']):
 
     target = get_display(subprocess.run(["dmenu", "-l", str(len(s.split('\n'))), "-p", "Send where?"], input=s, capture_output=True, text=True).stdout[:-1])
 
-swap_outputs(primary, target)
+if(target in i3.get_outputs() and primary in i3.get_outputs()):
+    swap_outputs(primary, target)
