@@ -7,7 +7,7 @@ import i3ipc
 def focused_display():
     workspace = i3.get_tree().find_focused().workspace().name
     for display in i3.get_outputs():
-        if (display['current_workspace'] == workspace):
+        if (display.current_workspace == workspace):
             return display
 
     return None
@@ -15,23 +15,23 @@ def focused_display():
 
 def get_primary():
     for display in i3.get_outputs():
-        if display['primary']:
+        if display.primary:
             return display
 
 
 def get_display(name):
     for display in i3.get_outputs():
-        if (display['name'] == name):
+        if (display.name == name):
             return display
 
 
 def swap_outputs(primary, target):
-    target_workspace = target['current_workspace']
-    primary_workspace = primary['current_workspace']
+    target_workspace = target.current_workspace
+    primary_workspace = primary.current_workspace
     i3.command('workspace --no-auto-back-and-forth ' + target_workspace)
-    i3.command('move workspace to output ' + primary['name'])
+    i3.command('move workspace to output ' + primary.name)
     i3.command('workspace --no-auto-back-and-forth ' + primary_workspace)
-    i3.command('move workspace to output ' + target['name'])
+    i3.command('move workspace to output ' + target.name)
 
 
 i3 = i3ipc.Connection()
@@ -39,13 +39,12 @@ i3 = i3ipc.Connection()
 target = focused_display()
 primary = get_primary()
 
-if(target['primary']):
+if(target.primary):
     s = ""
     for display in i3.get_outputs():
-        if not display['primary'] and display['name'] != 'xroot-0':
-            s += display['name'] + "\n"
+        if not display.primary and display.name != 'xroot-0':
+            s += display.name + "\n"
 
     target = get_display(subprocess.run(["dmenu", "-l", str(len(s.split('\n'))), "-p", "Send where?"], input=s, capture_output=True, text=True).stdout[:-1])
 
-if(target in i3.get_outputs() and primary in i3.get_outputs()):
-    swap_outputs(primary, target)
+swap_outputs(primary, target)
